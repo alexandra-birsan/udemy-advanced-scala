@@ -10,9 +10,22 @@ object PimpMyLibrary extends App {
 
     def sqrt: Double = Math.sqrt(value)
 
-    def * (values:List[Int]): List[Int] = (1 to value).flatMap(_ => values).toList
+    def *(values: List[Int]): List[Int] = {
+      def concatenate(n: Int): List[Int] = if (n <= 0) List()
+      else concatenate(n - 1) ++ values
 
-    def times(f:Function) =
+      concatenate(value)
+    }
+
+    def times(f: () => Unit): Unit = {
+      def timesAux(n: Int): Unit = if (n <= 0) ()
+      else {
+        f
+        timesAux(n - 1)
+      }
+
+      timesAux(value)
+    }
   }
 
   42.isEven // the compiler: new RichInt(42).isEven
@@ -45,13 +58,38 @@ object PimpMyLibrary extends App {
 
      3* List(1,2) = List(1,2,1,2,1,2)
    */
-  implicit class RichString(val value: String) {
+  implicit class RichString(string: String) {
 
-    def asInt: Int = Int.unbox(value)
+    def asInt: Int = Int.unbox(string)
 
-    def encrypt = value.map(_ - 3)
+    def encrypt(cypherDistance: Int) = string.map(c => (c + cypherDistance).asInstanceOf[Char])
   }
 
+  println(RichString("JOhn").encrypt(2))
 
+  3.times(() => println("Scala rocks!"))
+  println(4 * List(1, 2))
+
+  // "3" / 4
+  implicit def stringToInt (string: String):Int = Integer.parseInt(string)
+
+  println( "6" / 2)
+
+  // equivalent of an implicit class: implicit class RichAltInt(value: Int)
+  class RichAltInt(value:Int)
+  implicit def enrich(value:Int):RichAltInt = new RichAltInt(value)
+
+  // danger zone
+  implicit def intBoolean(i:Int):Boolean = i == 1
+
+  /*
+  if (n) do something
+  else do something else
+   */
+
+  private val aConditionedVAlue: String = if (3) "OK" else "SOMETHING WRONG"
+  println(aConditionedVAlue) // SOMETHING WRONG
+
+  //!!! IMPLICIT METHODS ARE REALLY DIFFICULT TO DEBUG => it could cost you a lot
 
 }
