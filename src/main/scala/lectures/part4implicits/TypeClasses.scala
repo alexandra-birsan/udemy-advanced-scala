@@ -60,43 +60,7 @@ object TypeClasses extends App {
 
   // 2 - we can define multiple serializers (e.g. for User we can have one serializer only for the user name)
 
-  //TYPE CLASS
-  trait MyTypeClassTemplate[T] {
-
-    def action(value: T): String
-  }
-
-  object MyTypeClassTemplate {
-
-    def apply[T](implicit instance: MyTypeClassTemplate[T]): MyTypeClassTemplate[T] = instance // surface out the entire instance trait
-  }
-
   // all the implementers of this type class template need to provide an implementation for this action
-
-  /**
-   * Equality
-   */
-  trait Equal[T] {
-
-    def apply(first: T, second: T): Boolean
-  }
-
-  implicit object Equal {
-
-    def apply[T](first:T, second:T )(implicit equality: Equal[T]): Boolean = equality.apply(first, second)
-  }
-
-  implicit object NameEquality extends Equal[User] {
-
-    override def apply(first: User, second: User): Boolean = first.name == second.name
-  }
-
-  object NameAndEmailEquality extends Equal[User] {
-
-    override def apply(first: User, second: User): Boolean = NameEquality.apply(first, second) && first.email == second.email
-  }
-
-  // NameEquality and NameAndEmailEquality are type class instances
 
   // PART 2
 
@@ -120,9 +84,57 @@ object TypeClasses extends App {
   // HTMLSerializer[User] gives us access to the entire type class trait (other methods of it as well)
   println(HTMLSerializer[User].serialize(john))
 
-  // exercise: implement the type class pattern for the equality class
-  val johnWithDifferentEmail = john.copy(email = "alex@rockthejvm.com")
-  println(Equal[User](john, johnWithDifferentEmail)) // AD-HOC polymorphism: if 2 distinct types have equal implemented(e.g. User), then we can call equal on them.
-  // Polymorphism because depending on the actual types of the values being compared, the compiler fetches the correct TYPE CLASS INSTANCE FOR OUR CLASS
-  println(Equal[User](john, johnWithDifferentEmail)(NameAndEmailEquality))
+  // part 3
+  implicit class HTMLEnrichment[T](value:T){
+
+    def toHTML(implicit serializer:HTMLSerializer[T]):String = serializer.serialize(value)
+  }
+
+  println(john.toHTML(UserSerializer)) // rewritten by the compiler as println(HTMLEnrichment[User](john).toHtml(UserSerializer))
+  // the compiler tries to wrap john in whatever implicit that has the toHtml method and takes a UserSerializer
+
+  // the code above is equivalent to :
+  println(john.toHTML) // because the UserSerializer is IMPLICIT
+  /*
+  - we can extend the functionality to new types
+  - we can have different implementations for the same type ( we can choose the implementation)
+  - super expressive <3
+   */
+
+  println(2.toHTML)
+
+  /*
+   -  type class itself HTMLSerialzer[T] {...}
+   - type class instances (some of which are implicit) - - - UserSerializer, IntSerializer
+   - conversion with implicit classes -- HTMLEnrichment
+   */
+
+  // context bounds
+  def htmlBoilerplate[T](content:T)(implicit serializer: HTMLSerializer[T]) =
+    s"<html><body> ${content.toHTML(serializer)} </body></html>"
+
+  // the method above written in a nicer way
+  // T: HTMLSerializer is a CONTEXT BOUND which tells the compiler to inject an implicit param of type HTMLSerializer
+  // advantage: super compact method signature
+  // Disadvantage: we can't pass a parameter by name (it will take the implicit one)
+  def htmlSugar[T: HTMLSerializer](content:T):String =
+    s"<html><body> ${content.toHTML} </body></html>"
+
+  // this is the best of both worlds: you have the super compact method signature & you can choose the serializer implementation
+  def htmlSugarImproved[T:HTMLSerializer](content:T):String = {
+    val serializer = implicitly[HTMLSerializer[T]]
+    // use serializer
+    s"<html><body> ${content.toHTML(serializer)} </body></html>"
+  }
+
+  // implicitly
+  case class Permissions(mask:String)
+
+  implicit val defaultPermissions:Permissions = Permissions("Permissions with 0744")
+
+  // in other part of the code we want to surface out what is the default value for Permissions
+  val standartPerms = implicitly[Permissions]
+
+
+``
 }
