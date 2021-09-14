@@ -101,7 +101,7 @@ object JSONSerialization extends App {
   // call stringify on the result
   val now = new Date(System.currentTimeMillis())
   println("Alex".toJSON.stringify)
-  println(2.toJSON.stringify)ZZ
+  println(2.toJSON.stringify)
    val alexandra: User = User("Alexandra", 25, "a@b.com")
   println(alexandra.toJSON.stringify)
   println(Feed(alexandra, List(
