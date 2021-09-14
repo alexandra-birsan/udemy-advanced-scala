@@ -135,6 +135,4 @@ object TypeClasses extends App {
   // in other part of the code we want to surface out what is the default value for Permissions
   val standartPerms = implicitly[Permissions]
 
-
-``
 }
