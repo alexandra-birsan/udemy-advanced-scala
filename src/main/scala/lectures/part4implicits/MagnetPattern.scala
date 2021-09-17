@@ -110,5 +110,25 @@ object MagnetPattern extends App {
   3 - you can't name or place default args (receive() ?)
   4 - call by name does not work correctly (hint: side effects)
    */
+
+  // tricky to use with methods that deal with side effects
+  trait HandleMagnet{
+    def apply():Unit
+  }
+
+  def handle(magnet: HandleMagnet) = magnet()
+
+  implicit class StringHandle(s:String) extends HandleMagnet {
+    override def apply(): Unit = {
+     println(s)
+     println(s)
+    }
+  }
+
+  handle({
+    println("Hello!") // this one is not wrapped into a StringHandle!
+    "magnet" // only this value is wrapped into a StringHandle
+  })
+  // if you use the magnet pattern for logging, you may have some logs missing :D
 }
 
