@@ -59,11 +59,11 @@ object TypeMembers extends App {
   }
 
   // this should not compile
-  class CustomList(hd:String, tl:CustomList) extends MList with ApplicableToNumbers {
-     override type A = String
-     override def head = hd
-   override def tail = tl
-  }
+//  class CustomList(hd:String, tl:CustomList) extends MList with ApplicableToNumbers {
+//     override type A = String
+//     override def head = hd
+//   override def tail = tl
+//  }
 
   // this should compile
   class IntegerList(hd:Integer, tl:IntegerList) extends MList with ApplicableToNumbers {
