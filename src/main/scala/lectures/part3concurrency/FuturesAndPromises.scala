@@ -22,7 +22,7 @@ object FuturesAndPromises extends App {
 
   println("Waiting for the future")
   aFuture.onComplete {
-    case Success(value) => println(s"The meaning of life is $value")
+    case Success(value)     => println(s"The meaning of life is $value")
     case Failure(exception) => println(s"I failed with $exception")
   }(global) // some thread
   Thread.sleep(2000)
@@ -40,8 +40,8 @@ object FuturesAndPromises extends App {
     // "database"
 
     val names = Map(
-      "fb.id.1-zuk" -> "Mark",
-      "fb.id.2-bill" -> "Bill",
+      "fb.id.1-zuk"   -> "Mark",
+      "fb.id.2-bill"  -> "Bill",
       "fb.id-0-dummy" -> "Dummy"
     )
 
@@ -52,18 +52,19 @@ object FuturesAndPromises extends App {
     val random = new Random()
 
     // API
-    def fetchProfile(id: String): Future[Profile] = Future {
-      // fetching from the db
-      Thread.sleep(random.nextInt(300))
-      val profile = Profile(id, names(id))
-      println("Found profile")
-      profile
-    }(global)
+    def fetchProfile(id: String): Future[Profile] =
+      Future {
+        // fetching from the db
+        Thread.sleep(random.nextInt(300))
+        val profile = Profile(id, names(id))
+        println("Found profile")
+        profile
+      }(global)
 
     def fetchBestFriend(profile: Profile): Future[Profile] = Future {
       Thread.sleep(random.nextInt(400))
       val bfId = friends(profile.id)
-      val bf = Profile(bfId, names(bfId))
+      val bf   = Profile(bfId, names(bfId))
       println("Found profile")
       bf
     }
@@ -80,8 +81,6 @@ object FuturesAndPromises extends App {
     //      }
     //      case Failure(ex) => ex.printStackTrace()
     //    }
-
-
     //    Thread.sleep(1000)
 
     // functional composition
@@ -210,7 +209,7 @@ object FuturesAndPromises extends App {
     val lastPromise = Promise[T]
     val checkAndComplete = (result: Try[T]) =>
       if (!bothPromise.tryComplete(result)) // tryComplete returns false if the promise has already been written, so that onComplete is called only once
-      lastPromise.complete(result)
+        lastPromise.complete(result)
 
     fa.onComplete(checkAndComplete)
     fb.onComplete(checkAndComplete)
@@ -238,12 +237,16 @@ object FuturesAndPromises extends App {
 
   val random = new Random()
 
-  retryUntil[Int](() => Future {
-    Thread.sleep(100)
-    val value = random.nextInt()
-    println(s"GENERATED $value")
-    value
-  }, value => value > 100)
+  retryUntil[Int](
+    () =>
+      Future {
+        Thread.sleep(100)
+        val value = random.nextInt()
+        println(s"GENERATED $value")
+        value
+      },
+    value => value > 100
+  )
 
   Thread.sleep(1000)
 }

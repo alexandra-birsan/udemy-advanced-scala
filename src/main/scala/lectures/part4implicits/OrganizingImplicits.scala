@@ -18,8 +18,7 @@ object OrganizingImplicits extends App {
 
   // exercise
 
-  class AnObj {
-  }
+  class AnObj {}
 
   object AnObj {
     //    implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
@@ -46,7 +45,6 @@ object OrganizingImplicits extends App {
   }
 
   //  println(persons.sorted)
-
 
   /*
   Implicit scope =  the places where the compiler looks for implicit values
@@ -97,8 +95,8 @@ object OrganizingImplicits extends App {
 
   object Purchase {
 
-    implicit val orderingByTotalPrice: Ordering[Purchase] = Ordering.fromLessThan((p1, p2) =>
-      calculateTotalPrice(p1) < calculateTotalPrice(p2))
+    implicit val orderingByTotalPrice: Ordering[Purchase] =
+      Ordering.fromLessThan((p1, p2) => calculateTotalPrice(p1) < calculateTotalPrice(p2))
 
     private def calculateTotalPrice(p1: Purchase) = {
       p1.unitPrice * p1.nUnits

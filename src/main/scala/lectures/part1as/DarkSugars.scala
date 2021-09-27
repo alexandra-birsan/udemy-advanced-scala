@@ -16,7 +16,9 @@ object DarkSugars extends App {
     throw new RuntimeException
   }
 
-  List(1, 2, 3).map { x => x + 1 }
+  List(1, 2, 3).map { x =>
+    x + 1
+  }
 
   // syntax sugar #2: single abstract method
   trait Action {
@@ -27,7 +29,8 @@ object DarkSugars extends App {
     override def act(x: Int): Int = x + 1
   }
 
-  val aFunckyInstance: Action = (x: Int) => x + 1 // magic done by the compiler to allow the conversion from lambda to single abstract type
+  val aFunckyInstance
+      : Action = (x: Int) => x + 1 // magic done by the compiler to allow the conversion from lambda to single abstract type
 
   //example: Runnables
   val aThread = new Thread(new Runnable {
@@ -92,9 +95,9 @@ object DarkSugars extends App {
 
   // syntax sugar #7: setters for mutable containers
   class Mutable {
-    private var internalMember:Int = 0 // private for OO encapsulation
-    def member:Int = internalMember // getter
-    def member_=(value:Int):Unit = internalMember = value //setter
+    private var internalMember: Int = 0 // private for OO encapsulation
+    def member:                 Int = internalMember // getter
+    def member_=(value: Int): Unit = internalMember = value //setter
   }
 
   val aMutableContainer = new Mutable

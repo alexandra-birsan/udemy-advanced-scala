@@ -18,7 +18,7 @@ object Intro extends App {
   // runnable.run() doesn\t do anything in parallel
   aThread.join() // blocks until aThread finishes running
 
-  val threadHello = new Thread(() => (1 to 5).foreach(_ => println("hello")))
+  val threadHello   = new Thread(() => (1 to 5).foreach(_ => println("hello")))
   val threadGoodbye = new Thread(() => (1 to 5).foreach(_ => println("goodbye")))
   //  threadHello.start()
   //  threadGoodbye.start()
@@ -110,16 +110,17 @@ object Intro extends App {
       in REVERSE ORDER
    */
 
-  def inception(maxThreads: Int, index: Int): Thread = new Thread(() => {
-    if (index < maxThreads) {
-      val newThread = inception(maxThreads, index + 1)
-      newThread.start()
-      newThread.join()
-    }
-    println(s"Hello from thread $index")
-  })
+  def inception(maxThreads: Int, index: Int): Thread =
+    new Thread(() => {
+      if (index < maxThreads) {
+        val newThread = inception(maxThreads, index + 1)
+        newThread.start()
+        newThread.join()
+      }
+      println(s"Hello from thread $index")
+    })
 
-  inception(50,1).start()
+  inception(50, 1).start()
   /*
   2)
    */

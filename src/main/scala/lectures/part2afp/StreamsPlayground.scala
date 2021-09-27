@@ -19,9 +19,9 @@ object StreamsPlayground extends App {
 
     def tail: MyStream[A]
 
-    def #::[B >: A](element: B): MyStream[B] // preprend operator
+    def #::[B >: A](element:      B): MyStream[B] // preprend operator
     def ++[B >: A](anotherStream: => MyStream[B]): MyStream[B] // concatenate 2 streams
-    def foreach(f: A => Unit): Unit
+    def foreach(f:                A => Unit): Unit
 
     def map[B](f: A => B): MyStream[B]
 
@@ -116,7 +116,6 @@ object StreamsPlayground extends App {
     override def takeList(n: Int): List[A] = take(n).toList()
 
   }
-
 
   val naturals: MyStream[Int] = MyStream.from(1)(_ + 1)
   //  naturals take 10 foreach println

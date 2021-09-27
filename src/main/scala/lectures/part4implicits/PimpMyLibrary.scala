@@ -2,7 +2,6 @@ package lectures.part4implicits
 
 object PimpMyLibrary extends App {
 
-
   // 2.isPrime - we can do this via implicit classes
   implicit class RichInt(val value: Int) { // declares the value as a field of the class
 
@@ -11,18 +10,20 @@ object PimpMyLibrary extends App {
     def sqrt: Double = Math.sqrt(value)
 
     def *(values: List[Int]): List[Int] = {
-      def concatenate(n: Int): List[Int] = if (n <= 0) List()
-      else concatenate(n - 1) ++ values
+      def concatenate(n: Int): List[Int] =
+        if (n <= 0) List()
+        else concatenate(n - 1) ++ values
 
       concatenate(value)
     }
 
     def times(f: () => Unit): Unit = {
-      def timesAux(n: Int): Unit = if (n <= 0) ()
-      else {
-        f
-        timesAux(n - 1)
-      }
+      def timesAux(n: Int): Unit =
+        if (n <= 0) ()
+        else {
+          f
+          timesAux(n - 1)
+        }
 
       timesAux(value)
     }
@@ -71,16 +72,16 @@ object PimpMyLibrary extends App {
   println(4 * List(1, 2))
 
   // "3" / 4
-  implicit def stringToInt (string: String):Int = Integer.parseInt(string)
+  implicit def stringToInt(string: String): Int = Integer.parseInt(string)
 
-  println( "6" / 2)
+  println("6" / 2)
 
   // equivalent of an implicit class: implicit class RichAltInt(value: Int)
-  class RichAltInt(value:Int)
-  implicit def enrich(value:Int):RichAltInt = new RichAltInt(value)
+  class RichAltInt(value: Int)
+  implicit def enrich(value: Int): RichAltInt = new RichAltInt(value)
 
   // danger zone
-  implicit def intBoolean(i:Int):Boolean = i == 1
+  implicit def intBoolean(i: Int): Boolean = i == 1
 
   /*
   if (n) do something

@@ -1,12 +1,12 @@
 package exercises
 
-import lectures.part4implicits.TypeClasses.{HTMLSerializer, User, john}
+import lectures.part4implicits.TypeClasses.{john, HTMLSerializer, User}
 
 object EqualityPlayground extends App {
 
   /**
-   * Equality
-   */
+    * Equality
+    */
   trait Equal[T] {
 
     def apply(first: T, second: T): Boolean
@@ -14,7 +14,7 @@ object EqualityPlayground extends App {
 
   implicit object Equal {
 
-    def apply[T](first:T, second:T )(implicit equality: Equal[T]): Boolean = equality.apply(first, second)
+    def apply[T](first: T, second: T)(implicit equality: Equal[T]): Boolean = equality.apply(first, second)
   }
 
   implicit object NameEquality extends Equal[User] {
@@ -24,7 +24,8 @@ object EqualityPlayground extends App {
 
   object NameAndEmailEquality extends Equal[User] {
 
-    override def apply(first: User, second: User): Boolean = NameEquality.apply(first, second) && first.email == second.email
+    override def apply(first: User, second: User): Boolean =
+      NameEquality.apply(first, second) && first.email == second.email
   }
 
   // NameEquality and NameAndEmailEquality are type class instances
@@ -43,13 +44,13 @@ object EqualityPlayground extends App {
    === (anotherValue: T)
    !==(anotherValue: T)
    */
-  implicit class EqualEnhancer[T](value:T){
+  implicit class EqualEnhancer[T](value: T) {
 
-    def ===(anotherValue:T)(implicit equal: Equal[T]): Boolean = Equal(value, anotherValue)
+    def ===(anotherValue: T)(implicit equal: Equal[T]): Boolean = Equal(value, anotherValue)
 
-    def !==(anotherValue:T)(implicit  equal: Equal[T]): Boolean = !Equal(value, anotherValue)
+    def !==(anotherValue: T)(implicit equal: Equal[T]): Boolean = !Equal(value, anotherValue)
   }
 
-  println(john===johnWithDifferentEmail) // EqualEnhancer(john).===(anotherValue)
-  println(john!==johnWithDifferentEmail)
+  println(john === johnWithDifferentEmail) // EqualEnhancer(john).===(anotherValue)
+  println(john !== johnWithDifferentEmail)
 }

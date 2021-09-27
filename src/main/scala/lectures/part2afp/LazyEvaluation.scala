@@ -60,8 +60,8 @@ object LazyEvaluation extends App {
   }
 
   val numbers = List(1, 25, 40, 5, 23)
-  val lt30 = numbers filter lessThan30 // this does ETA-expansion
-  val gt20 = lt30 filter greaterThan20
+  val lt30    = numbers filter lessThan30 // this does ETA-expansion
+  val gt20    = lt30 filter greaterThan20
   println(gt20)
 
   val lt30lazy = numbers.withFilter(lessThan30) // withFilter uses lazy values under the hood
@@ -77,4 +77,4 @@ object LazyEvaluation extends App {
   // this translates to
   List(1, 2, 3).withFilter(_ % 2 == 0).map(_ + 1)
 
-  }
+}

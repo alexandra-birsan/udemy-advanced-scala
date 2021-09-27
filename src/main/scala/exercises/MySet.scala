@@ -5,7 +5,7 @@ object FunctionalCollectionsPlayground extends App {
   trait MySet[A] extends (A => Boolean) {
     /*
   EXERCISE - implement a functional set
-   */
+     */
     def contains(elem: A): Boolean
 
     def +(elem: A): MySet[A]
@@ -65,10 +65,8 @@ object FunctionalCollectionsPlayground extends App {
       if (this.contains(elem)) this
       else NonEmptySet(elem, this)
 
-
     override def ++(anotherSet: MySet[A]): MySet[A] =
       tail ++ anotherSet + head
-
 
     override def map[B](f: A => B): MySet[B] = NonEmptySet(f(head), tail.map(f))
 
@@ -85,8 +83,8 @@ object FunctionalCollectionsPlayground extends App {
     override def -(element: A): MySet[A] = filter(a => a != element)
 
     override def &(another: MySet[A]): MySet[A] =
-    //      if (another.contains(head)) NonEmptySet(head, new EmptySet[A]) ++ this.tail.&(another)
-    //      else this.tail.&(another)
+      //      if (another.contains(head)) NonEmptySet(head, new EmptySet[A]) ++ this.tail.&(another)
+      //      else this.tail.&(another)
       filter(another) // intersection and filtering are the same thing because our set is functional (anotherSet.contains(x) = anotherSet(x))
 
     override def --(another: MySet[A]): MySet[A] =
@@ -95,7 +93,7 @@ object FunctionalCollectionsPlayground extends App {
 
     // implement a unary_! = negation of a set
     // set[1,2,3] => return all the elements except those not in the set
-    def unary_! : MySet[A] = new PropertyBasedSet[A](x => !this (x))
+    def unary_! : MySet[A] = new PropertyBasedSet[A](x => !this(x))
   }
 
   // all elements of type A which satisfy a property

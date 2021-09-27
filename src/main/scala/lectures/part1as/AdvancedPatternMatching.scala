@@ -5,15 +5,16 @@ object AdvancedPatternMatching extends App {
   val numbers = List(1)
   val description = numbers match {
     case head :: Nil => println(s"The only element is $head")
-    case _ =>
+    case _           =>
   }
 
   class Person(val name: String, val age: Int)
 
   //we define a companion object and a method unapply
   object Person {
-    def unapply(person: Person): Option[(String, Int)] = if (person.age < 21) None
-    else Some(person.name, person.age)
+    def unapply(person: Person): Option[(String, Int)] =
+      if (person.age < 21) None
+      else Some(person.name, person.age)
 
     def unapply(age: Int): Option[String] =
       Some(if (age < 21) "minor" else "major")
@@ -22,7 +23,7 @@ object AdvancedPatternMatching extends App {
   val bob = new Person("Bob", 25)
   val greeting = bob match {
     case Person(name, age) => s"Hello, $name of age $age! "
-    case _ => "Hello, stranger!"
+    case _                 => "Hello, stranger!"
   }
 
   println(greeting)
@@ -38,8 +39,8 @@ object AdvancedPatternMatching extends App {
   val n: Int = 44
   val mathProperty = n match {
     case singleDigit(_) => "single digit" //
-    case even() => "an even number"
-    case _ => "no property"
+    case even()         => "an even number"
+    case _              => "no property"
   }
 
   object even {
@@ -66,7 +67,6 @@ object AdvancedPatternMatching extends App {
     case List(1, _*) => "starting with 1"
   }
 
-
   abstract class MyList[+A] {
     def head: A = ???
 
@@ -87,7 +87,7 @@ object AdvancedPatternMatching extends App {
 
   val decomposed = myList match {
     case MyList(1, 2, _*) => "starting with 1, 2"
-    case _ => "something else"
+    case _                => "something else"
   }
 
   println(decomposed)
@@ -116,10 +116,9 @@ object AdvancedPatternMatching extends App {
 
   println(bob match {
     case (PersonWrapper(n)) => s"This is the person's name is $n"
-    case _ => "An alien"
+    case _                  => "An alien"
   })
 
   // if we remove the isEmpty method from PersonWrapper, the code will no lon
 
 }
-

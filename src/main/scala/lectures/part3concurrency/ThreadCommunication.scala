@@ -108,7 +108,7 @@ object ThreadCommunication extends App {
 
     val producer = new Thread(() => {
       val random = new Random()
-      var i = 0
+      var i      = 0
       while (true) {
         buffer.synchronized({
           if (buffer.size == capacity) {
@@ -141,14 +141,16 @@ object ThreadCommunication extends App {
 
   def prodsConsLargeBufferEnhanced(): Unit = {
     val buffer: mutable.Queue[Int] = new mutable.Queue[Int]()
-    val capacity = 10
+    val capacity      = 10
     val consumerTotal = 3;
     val producerTotal = 6;
 
-    val consumers = Range.apply(1, consumerTotal)
+    val consumers = Range
+      .apply(1, consumerTotal)
       .map(i => new Thread(() => consume(buffer, i)))
       .toList
-    val producers = Range.apply(1, producerTotal)
+    val producers = Range
+      .apply(1, producerTotal)
       .map(i => new Thread(() => produce(buffer, capacity, i)))
       .toList
 
@@ -159,7 +161,7 @@ object ThreadCommunication extends App {
   private def produce(buffer: mutable.Queue[Int], capacity: Int, index: Int) = {
 
     val random = new Random()
-    var i = 0
+    var i      = 0
     while (true) {
       buffer.synchronized({
         while (buffer.size == capacity) {
@@ -207,17 +209,20 @@ object ThreadCommunication extends App {
   // notifyAll
   def testNotifyAll() = {
     val bell = new Object
-    (1 to 10).foreach(i => new Thread(() => {
-      bell.synchronized {
-        println(s"[thread $i] waiting...")
-        bell.wait()
-        println(s"[thread $i] hooray!")
-      }
-    }).start())
+    (1 to 10).foreach(
+      i =>
+        new Thread(() => {
+          bell.synchronized {
+            println(s"[thread $i] waiting...")
+            bell.wait()
+            println(s"[thread $i] hooray!")
+          }
+        }).start()
+    )
 
-    new Thread(()=>{
+    new Thread(() => {
       Thread.sleep(2000)
-      bell.synchronized{
+      bell.synchronized {
         println("Rock'n roll!")
         bell.notifyAll()
       }
@@ -227,15 +232,15 @@ object ThreadCommunication extends App {
 //  testNotifyAll()
 
   // deadlock
-  case class Friend(name:String){
-    def bow(other:Friend) = {
+  case class Friend(name: String) {
+    def bow(other: Friend) = {
       println(s"$this: I am bowing to my friend  $other")
       other.rise(this)
       println(s"$this: my friend $other has risen")
     }
 
-    def rise(other:Friend): Unit ={
-      this.synchronized{
+    def rise(other: Friend): Unit = {
+      this.synchronized {
         println(s"$this: I am rising to my friend $other")
       }
     }
@@ -243,13 +248,13 @@ object ThreadCommunication extends App {
     var side = "right"
 
     def switchSide = {
-      if(side == "right")
-        side = "left"
+      if (side == "right")
+        side    = "left"
       else side = "right"
     }
 
-    def pass(other:Friend) = {
-      while (this.side == other.side){
+    def pass(other: Friend) = {
+      while (this.side == other.side) {
         println(s"Oh, but please, $other, feel free to pass...")
         this.switchSide
         Thread.sleep(1000)
@@ -257,14 +262,12 @@ object ThreadCommunication extends App {
     }
   }
 
-  val sam = Friend("Sam")
+  val sam    = Friend("Sam")
   val pierre = Friend("Pierre")
 //  new Thread(()=> sam.bow(pierre)).start()
 //  new Thread(()=> pierre.bow(sam)).start()
 
   // 3. livelock
-  new Thread(()=> sam.pass(pierre)).start()
-  new Thread(()=> pierre.pass(sam)).start()
+  new Thread(() => sam.pass(pierre)).start()
+  new Thread(() => pierre.pass(sam)).start()
 }
-
-

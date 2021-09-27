@@ -70,7 +70,8 @@ object TypeClasses extends App {
       serializer.serialize(value)
 
     //an even better design
-    def apply[T](implicit serializer: HTMLSerializer[T]) = serializer // makes the compiler surface out the serializer of type T
+    def apply[T](implicit serializer: HTMLSerializer[T]) =
+      serializer // makes the compiler surface out the serializer of type T
   }
 
   implicit object IntSerializer extends HTMLSerializer[Int] {
@@ -85,9 +86,9 @@ object TypeClasses extends App {
   println(HTMLSerializer[User].serialize(john))
 
   // part 3
-  implicit class HTMLEnrichment[T](value:T){
+  implicit class HTMLEnrichment[T](value: T) {
 
-    def toHTML(implicit serializer:HTMLSerializer[T]):String = serializer.serialize(value)
+    def toHTML(implicit serializer: HTMLSerializer[T]): String = serializer.serialize(value)
   }
 
   println(john.toHTML(UserSerializer)) // rewritten by the compiler as println(HTMLEnrichment[User](john).toHtml(UserSerializer))
@@ -110,27 +111,27 @@ object TypeClasses extends App {
    */
 
   // context bounds
-  def htmlBoilerplate[T](content:T)(implicit serializer: HTMLSerializer[T]) =
+  def htmlBoilerplate[T](content: T)(implicit serializer: HTMLSerializer[T]) =
     s"<html><body> ${content.toHTML(serializer)} </body></html>"
 
   // the method above written in a nicer way
   // T: HTMLSerializer is a CONTEXT BOUND which tells the compiler to inject an implicit param of type HTMLSerializer
   // advantage: super compact method signature
   // Disadvantage: we can't pass a parameter by name (it will take the implicit one)
-  def htmlSugar[T: HTMLSerializer](content:T):String =
+  def htmlSugar[T: HTMLSerializer](content: T): String =
     s"<html><body> ${content.toHTML} </body></html>"
 
   // this is the best of both worlds: you have the super compact method signature & you can choose the serializer implementation
-  def htmlSugarImproved[T:HTMLSerializer](content:T):String = {
+  def htmlSugarImproved[T: HTMLSerializer](content: T): String = {
     val serializer = implicitly[HTMLSerializer[T]]
     // use serializer
     s"<html><body> ${content.toHTML(serializer)} </body></html>"
   }
 
   // implicitly
-  case class Permissions(mask:String)
+  case class Permissions(mask: String)
 
-  implicit val defaultPermissions:Permissions = Permissions("Permissions with 0744")
+  implicit val defaultPermissions: Permissions = Permissions("Permissions with 0744")
 
   // in other part of the code we want to surface out what is the default value for Permissions
   val standartPerms = implicitly[Permissions]

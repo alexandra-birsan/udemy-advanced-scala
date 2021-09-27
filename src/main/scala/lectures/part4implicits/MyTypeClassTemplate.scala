@@ -8,5 +8,6 @@ trait MyTypeClassTemplate[T] {
 
 object MyTypeClassTemplate {
 
-  def apply[T](implicit instance: MyTypeClassTemplate[T]): MyTypeClassTemplate[T] = instance // surface out the entire instance trait
+  def apply[T](implicit instance: MyTypeClassTemplate[T]): MyTypeClassTemplate[T] =
+    instance // surface out the entire instance trait
 }

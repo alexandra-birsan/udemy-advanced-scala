@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import scala.collection.parallel.immutable.ParVector
 import scala.collection.parallel.CollectionConverters._
 
-
 object ParallelUtils extends App {
 
   // 1 - parallel collection
@@ -29,7 +28,7 @@ object ParallelUtils extends App {
     System.currentTimeMillis() - time
   }
 
-  val list = (1 to 100000).toList
+  val list       = (1 to 100000).toList
   val serialTime = measure(list.map(_ + 1))
   val parallelTime = measure {
     list.par.map(_ + 1)

@@ -2,12 +2,12 @@ package lectures.part4implicits
 
 object ExtensionMethods extends App {
 
-  case class Person(name:String){
-    def greet():String = s"Hi, my name is $name"
+  case class Person(name: String) {
+    def greet(): String = s"Hi, my name is $name"
   }
 
-  extension greetAsPerson(string:String) { // extension method
-    def greetAsPerson():String = Person(string).greet()
+  extension greetAsPerson (string: String) { // extension method
+    def greetAsPerson(): String = Person(string).greet()
   }
 
   // this allows me to use the greetAsPerson method on String, even if it does not belong to the original type

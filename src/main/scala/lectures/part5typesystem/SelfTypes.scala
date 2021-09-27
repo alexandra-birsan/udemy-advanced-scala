@@ -3,15 +3,15 @@ package lectures.part5typesystem
 object SelfTypes extends App {
 
   trait Instrumentalist {
-    def play():Unit
+    def play(): Unit
   }
 
   // how to enforce that a singer knows how to play an instrument?
-  trait Singer { self:Instrumentalist => // marker at the language level that forces whoever implements this trait to
+  trait Singer { self: Instrumentalist => // marker at the language level that forces whoever implements this trait to
     // self can be replaced with a, scala whatever :D
     // implement Instrumentalist as well
 
-    def sing():Unit
+    def sing(): Unit
   }
 
   class LeadSinger extends Singer with Instrumentalist {
@@ -52,7 +52,7 @@ object SelfTypes extends App {
   // self-types are commonly used in a CAKE PATTERN
 
   // CAKE PATTERN = "dependency injection"
-  class Component{
+  class Component {
     // API
   }
   // classical DI
@@ -62,17 +62,18 @@ object SelfTypes extends App {
   // dependent component will receive at runtime either ComponentA or ComponentB to build the app
 
   // cake pattern
-  trait ScalaComponent{
+  trait ScalaComponent {
     //API
-    def action(x:Int):String
+    def action(x: Int): String
   }
 
-  trait ScalaDependentComponent {self: ScalaComponent =>
+  trait ScalaDependentComponent { self: ScalaComponent =>
 
-    def dependentAction(x:Int):String = action(x) + "This rocks"
+    def dependentAction(x: Int): String = action(x) + "This rocks"
   }
 
-  trait ScalaApplication {self: ScalaDependentComponent => }
+  trait ScalaApplication { self: ScalaDependentComponent =>
+  }
 
   // how cake pattern creates abstraction layers
   // layer 1 - small components
@@ -81,16 +82,18 @@ object SelfTypes extends App {
   // layer 2 - compose
   trait Profile extends ScalaDependentComponent with Picture // you can choose now which component you want to mix in
   trait Analytics extends ScalaDependentComponent with Stats
-   // AT EACH LAYER YOU CAN CHOOSE WHAT COMPONENTS FROM THE PREVIOUS LAYER YOU WANT TO MIX IN
-   // layer 3
-    trait AnalyticsApp extends ScalaApplication with Analytics
-    // at each layer you can bake your app in layers
+  // AT EACH LAYER YOU CAN CHOOSE WHAT COMPONENTS FROM THE PREVIOUS LAYER YOU WANT TO MIX IN
+  // layer 3
+  trait AnalyticsApp extends ScalaApplication with Analytics
+  // at each layer you can bake your app in layers
 
   // cyclical dependencies
 //  class X extends Y
 //  class Y extends X
-  trait X {self: Y =>}
-  trait Y {self: X =>}
+  trait X { self: Y =>
+  }
+  trait Y { self: X =>
+  }
   // this cyclic dependency is only apparent. We say that whoever implements X must also implement Y and whoever implements
   //Y must implement X, there's no contradiction there
   // we are saying that X and Y are independent concepts that go hand in hand.

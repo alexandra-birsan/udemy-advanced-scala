@@ -29,9 +29,9 @@ object Variance extends App {
   class InvariantCage[T](animal: T) // invariant
 
   // covariant positions
-  class CovariantCage[+T](val animal:T) // COVARIANT position:in this position the compiler accepts a field declared with a covariant type
+  class CovariantCage[+T](val animal: T) // COVARIANT position:in this position the compiler accepts a field declared with a covariant type
   // covariant positions (e.g. class field declaration) also accept invariant types
-  val ccage2:CCage[Animal] = new CCage[Cat]
+  val ccage2: CCage[Animal] = new CCage[Cat]
 //  class ContravariantCage[-T](val animal:T) // compilation error: contravariant type occurs in covariant position
 // if the compiler had allowed the declaration above:
   // val catCage : XCage[Cat] = new XCage[Animal](new Crocodile)
@@ -56,22 +56,23 @@ object Variance extends App {
   val ccage: CCage[Animal] = new CCage[Dog]
   ccage.add(new Cat)
    */
-  class AnotherContraVariantCage[-T]{
+  class AnotherContraVariantCage[-T] {
     def addAnimal(animal: T) = true
   }
- val acc:AnotherContraVariantCage[Cat] =  new AnotherContraVariantCage[Animal]
- acc.addAnimal(new Cat)
+  val acc: AnotherContraVariantCage[Cat] = new AnotherContraVariantCage[Animal]
+  acc.addAnimal(new Cat)
 //  acc.addAnimal(new Dog) // does not compile
   class Kitty extends Cat
   acc.addAnimal(new Kitty)
 
   class MyList[+A] {
-    def add[B>:A](element:B):MyList[B] = new MyList[B] // !!! WIDENING THE TYPE
+    def add[B >: A](element: B): MyList[B] = new MyList[B] // !!! WIDENING THE TYPE
   }
-  val emptyList = new MyList[Kitty]
-  val animals = emptyList.add(new Kitty)
+  val emptyList   = new MyList[Kitty]
+  val animals     = emptyList.add(new Kitty)
   val moreAnimals = animals.add(new Cat) // without the hack above this would work
-  val evenMoreAnimals: MyList[Animal] = moreAnimals.add(new Dog) // the compiler widens the return type to the closest parent: Animal
+  val evenMoreAnimals
+      : MyList[Animal] = moreAnimals.add(new Dog) // the compiler widens the return type to the closest parent: Animal
 
   // the method arguments are in contravariant position
 
@@ -79,7 +80,7 @@ object Variance extends App {
   class PetShop[-T] {
 //    def get(isItAPuppy:Boolean): T  // METHOD RETURN TYPES ARE IN COVARIANT POSITIONS
 
-    def get[S <: T](isItAPuppy:Boolean, defaultAnimal:S):S = defaultAnimal
+    def get[S <: T](isItAPuppy: Boolean, defaultAnimal: S): S = defaultAnimal
   }
 
   // if the code above works:
@@ -90,7 +91,7 @@ object Variance extends App {
   val dogShop:PetShop[Dog] = catShop
   dogShop.get(true) // EVIL CAT!
    */
-  val shop:PetShop[Dog] =  new PetShop[Animal]
+  val shop: PetShop[Dog] = new PetShop[Animal]
   class TerraNova extends Dog
   val bigFurry = shop.get(true, new TerraNova)
 
@@ -100,7 +101,7 @@ object Variance extends App {
   - method return types are in COVARIANT position
    */
 
-/*
+  /*
   1. invariant, covariant , contravariant
      Parking[T](things:List[T]){
       park(vehicle:T)
@@ -111,56 +112,56 @@ object Variance extends App {
    2. use someone else's API: IList[T]
    3. Parking = monad
      - flatMap
- */
+   */
 
-class Vehicle
-class Bike extends Vehicle
-class Car extends Vehicle
-class IList[T]
+  class Vehicle
+  class Bike extends Vehicle
+  class Car extends Vehicle
+  class IList[T]
 
-  class IParking[T](vehicles: List[T]){
+  class IParking[T](vehicles: List[T]) {
 
-    def park(vehicle: T) = "parked"
-    def impound(vehicles: List[T]) = "impound"
-    def checkVehicles(condition:String):List[T] = vehicles
-    def flatMap[V](f:IParking[T] => IParking[V] ) = ???
+    def park(vehicle:            T) = "parked"
+    def impound(vehicles:        List[T]) = "impound"
+    def checkVehicles(condition: String): List[T] = vehicles
+    def flatMap[V](f:            IParking[T] => IParking[V]) = ???
 
   }
 
-  class CParking[+T](vehicles: List[T]){
+  class CParking[+T](vehicles: List[T]) {
 
-    def park [B>:T](vehicle: B) = "parked"
-    def impound[B>:T](vehicles: List[B]) = "impound"
-    def checkVehicles(condition:String):List[T] = vehicles
-    def flatMap[V](f:CParking[T] => CParking[V] ) = ???
+    def park[B >: T](vehicle:     B) = "parked"
+    def impound[B >: T](vehicles: List[B]) = "impound"
+    def checkVehicles(condition:  String): List[T] = vehicles
+    def flatMap[V](f:             CParking[T] => CParking[V]) = ???
   }
 
-  class ContraParking[-T](vehicles: List[T]){
+  class ContraParking[-T](vehicles: List[T]) {
 
-    def park (vehicle: T) = "parked"
-    def impound(vehicles: List[T]) = "impound"
-    def checkVehicles[B<:T](condition:String):List[B] = List.empty
-    def flatMap[B<:T, V](f:CParking[B] => CParking[V] ) = ???
+    def park(vehicle:                    T) = "parked"
+    def impound(vehicles:                List[T]) = "impound"
+    def checkVehicles[B <: T](condition: String): List[B] = List.empty
+    def flatMap[B <: T, V](f:            CParking[B] => CParking[V]) = ???
   }
 
+  class CParking2[+T](vehicles: IList[T]) {
 
-  class CParking2[+T](vehicles: IList[T]){
-
-    def park [B>:T](vehicle: B) = "parked"
-    def impound[B>:T](vehicles: IList[B]) = "impound" // T is covariant, but IList is invariant, so we need to apply the hack again
-    def checkVehicles[B>:T](condition:String):IList[B] = new IList[B]()
+    def park[B >: T](vehicle:     B) = "parked"
+    def impound[B >: T](vehicles: IList[B]) =
+      "impound" // T is covariant, but IList is invariant, so we need to apply the hack again
+    def checkVehicles[B >: T](condition: String): IList[B] = new IList[B]()
   }
 
-  class ContraParking2[-T](vehicles: IList[T]){
+  class ContraParking2[-T](vehicles: IList[T]) {
 
-    def park (vehicle: T) = "parked"
-    def impound[B<:T](vehicles: IList[B]) = "impound"
-    def checkVehicles[B<:T](condition:String):IList[B] = new IList[B]()
+    def park(vehicle:                    T) = "parked"
+    def impound[B <: T](vehicles:        IList[B]) = "impound"
+    def checkVehicles[B <: T](condition: String): IList[B] = new IList[B]()
   }
 
   // flatMap
-  class Parking[T](vehicles:List[T]){
+  class Parking[T](vehicles: List[T]) {
 
-    def flatMap[V](f:Parking[T] => Parking[V] ) = f.apply(this)
+    def flatMap[V](f: Parking[T] => Parking[V]) = f.apply(this)
   }
 }

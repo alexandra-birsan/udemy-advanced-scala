@@ -8,8 +8,8 @@ object PathDependentTypes extends App {
     object InnerObject
     type InnerType
 
-    def print(i:Inner) =  println("I")
-    def printGeneral(i:Outer#Inner) =  println("i")
+    def print(i:        Inner)       = println("I")
+    def printGeneral(i: Outer#Inner) = println("i")
   }
 
   def aMethod: Int = {
@@ -25,7 +25,7 @@ object PathDependentTypes extends App {
   val inner = new outer.Inner
 
   val oo = new Outer
-  val otherInner:oo.Inner = new oo.Inner // inner and otherInner are different types
+  val otherInner: oo.Inner = new oo.Inner // inner and otherInner are different types
 
   outer.printGeneral(inner)
   outer.printGeneral(otherInner)
@@ -37,7 +37,7 @@ object PathDependentTypes extends App {
   // use path-dependent types
   // use abstract type members and/or type aliases
 
-  trait ItemLike{
+  trait ItemLike {
     type Key
   }
   trait Item[K] extends ItemLike {
@@ -47,7 +47,7 @@ object PathDependentTypes extends App {
   trait IntItem extends Item[Int]
   trait StringItem extends Item[String]
 
-  def get[ItemType <: ItemLike](value:ItemType#Key):ItemType = ???
+  def get[ItemType <: ItemLike](value: ItemType#Key): ItemType = ???
 
   get[IntItem](42)
   get[StringItem]("home")

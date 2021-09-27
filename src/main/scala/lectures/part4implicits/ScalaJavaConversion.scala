@@ -12,8 +12,7 @@ object ScalaJavaConversion extends App {
   (1 to 5).foreach(javaSet.add)
   println(javaSet)
 
-  val scalaSet
-    : mutable.Set[Int] = javaSet.asScala // JavaConverters has implicit conversion methods
+  val scalaSet: mutable.Set[Int] = javaSet.asScala // JavaConverters has implicit conversion methods
   /*
   Iterator
   Iterable
@@ -30,8 +29,8 @@ object ScalaJavaConversion extends App {
 
   println(juNumbersBuffer.asScala eq numbersBuffer) // returns true, so the conversion returns the initial reference. !!! Not all the conversions work like this.
 
-  val numbers = List(1, 2, 3)
-  val juNumbers = numbers.asJava
+  val numbers     = List(1, 2, 3)
+  val juNumbers   = numbers.asJava
   val backToScala = juNumbers.asScala // does not return the initial reference. The original List is immutable
 
   println(backToScala eq numbers) // false. Shallow equals

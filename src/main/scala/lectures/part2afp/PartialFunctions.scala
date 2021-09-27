@@ -16,12 +16,13 @@ object PartialFunctions extends App {
 
   // the implementation above does its job, but it's clunky to do it like this
 
-  val aNicerFussyFunction = (x: Int) => x match {
-    case 1 => 42
-    case 2 => 56
-    case 3 => 999
-    // for other numbers it'll throw a scala.MatchError:
-  }
+  val aNicerFussyFunction = (x: Int) =>
+    x match {
+      case 1 => 42
+      case 2 => 56
+      case 3 => 999
+      // for other numbers it'll throw a scala.MatchError:
+    }
   // {1,2,5} => Int  this function can be applied only to the {1,2,3} domain from Int, it's a partial function
   // Scala supports a short-hand notation for this
 
@@ -68,17 +69,16 @@ object PartialFunctions extends App {
    */
 
   /**
-   * Exercises
-   *
-   * 1. construct a PF yourself (anon class)
-   * 2. dumb chat bot as a PF
-   */
-
+    * Exercises
+    *
+    * 1. construct a PF yourself (anon class)
+    * 2. dumb chat bot as a PF
+    */
   // ex 1
   val anAnonPF = new PartialFunction[String, String] {
     override def apply(v1: String): String = v1 match {
       case "Hello!" => "Hello, there!"
-      case "Bye!" => "Bye, bye!"
+      case "Bye!"   => "Bye, bye!"
     }
 
     override def isDefinedAt(x: String): Boolean = x == "Hello!" || x == "Bye!"

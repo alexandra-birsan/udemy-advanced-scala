@@ -20,7 +20,7 @@ object RockingInheritance extends App {
   }
 
   def processStream[T](
-    stream: GenericStream[T] with Writer[T] with Closeable
+      stream: GenericStream[T] with Writer[T] with Closeable
   ): Unit =
     // GenericStream[T] with Writer[T] with Closeable - IS ITS OWN TYPE and has access to all our API
     // this is the convenience: when we don't know who uses mixes in our specific traits, we can use them all in
@@ -36,7 +36,7 @@ object RockingInheritance extends App {
     def name: String
   }
 
-  trait Lion extends Animal { override def name: String = "LION" }
+  trait Lion extends Animal { override def name:  String = "LION" }
   trait Tiger extends Animal { override def name: String = "TIGER" }
 //  class Mutant extends Lion with Tiger { override def name: String = "ALIEN" }
   class Mutant extends Lion with Tiger // this is the classical diamond problem:

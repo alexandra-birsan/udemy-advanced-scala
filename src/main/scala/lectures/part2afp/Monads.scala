@@ -9,19 +9,21 @@ object Monads extends App {
   }
 
   object Attempt {
-    def apply[A](a: => A): Attempt[A] = try {
-      Success(a)
-    } catch {
-      case e: Throwable => Failure(e)
-    }
+    def apply[A](a: => A): Attempt[A] =
+      try {
+        Success(a)
+      } catch {
+        case e: Throwable => Failure(e)
+      }
   }
 
   case class Success[A](value: A) extends Attempt[A] {
-    override def flatMap[B](f: A => Attempt[B]): Attempt[B] = try {
-      f(value)
-    } catch {
-      case e: Throwable => Failure(e)
-    }
+    override def flatMap[B](f: A => Attempt[B]): Attempt[B] =
+      try {
+        f(value)
+      } catch {
+        case e: Throwable => Failure(e)
+      }
   }
 
   case class Failure(e: Throwable) extends Attempt[Nothing] {
@@ -109,8 +111,12 @@ object Monads extends App {
   println(lazyMonad.use)
   println(lazyMonad.flatMap(x => LazyMonad(x * 10)).use)
   println(lazyMonad.map(_ * 100).use)
-  println(LazyMonad.flatten(LazyMonad(LazyMonad {
-    println("I'm the inner monad")
-    10
-  })).use)
+  println(
+    LazyMonad
+      .flatten(LazyMonad(LazyMonad {
+        println("I'm the inner monad")
+        10
+      }))
+      .use
+  )
 }

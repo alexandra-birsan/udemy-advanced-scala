@@ -42,7 +42,7 @@ object CurriesAndPAF extends App {
 
   val simpleAdd7 = simpleAddMethod(_, 7) // alternative syntax for turning methods into function values
 
-  val curriedAdd7 = curriedAddMethod(7) _ // PAF - lift a method to a function
+  val curriedAdd7   = curriedAddMethod(7) _ // PAF - lift a method to a function
   val curriedAdd7_2 = curriedAddMethod(_: Int)(7) // PAF alternative syntax
 
   // _ are powerful
@@ -56,23 +56,21 @@ object CurriesAndPAF extends App {
   val fillInTheBlanks = concatenator("Hello, ", _: String, _: String) // (x, y) => concatenator("Hello", x, y)
   println(fillInTheBlanks("Alex", " Scala is awesome")) // each param is injected in the corresp _
 
-
   // EXERCISES
   /*
   1. Process a list of numbers and return their string representations with different formats
   Use the %4.2f, %8.6f and %14.12f with a curried formatter function
-  */
+   */
 
   def curriedFormatter(format: String)(n: Double) = format.format(n)
 
-  val f42 = curriedFormatter("%4.2f") _
-  val f86 = curriedFormatter("%8.6f") _
+  val f42   = curriedFormatter("%4.2f") _
+  val f86   = curriedFormatter("%8.6f") _
   val f1412 = curriedFormatter("%14.12f") _
 
   List(1.7, 2.3, 3.5).map(f42) foreach println // the compiler does sweet eta-expansion for us
   List(1.2, 2.3, 3.5).map(f86) foreach println
   List(1.7, 2.3, 3.5).map(f1412) foreach println
-
 
   /*
   2. difference between
@@ -102,7 +100,7 @@ object CurriesAndPAF extends App {
 
   //  val lambda = () => 10
   //  println(byName(lambda) // not ok
-  println(byName((() => 42) ())) // ok!!
+  println(byName((() => 42)())) // ok!!
   def curried(x: Int)(y: Int) = x + y
 
 //    byName(parenMethod _)// not ok

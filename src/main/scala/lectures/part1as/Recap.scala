@@ -45,7 +45,8 @@ object Recap extends App {
 
   //anonymous classes
   val aCarnivore = new Carnivore {
-    override def eat(animal: Animal): Unit = "Roar!" // the compiler creates a new anon class for us and assigns the new value to an instance
+    override def eat(animal: Animal): Unit =
+      "Roar!" // the compiler creates a new anon class for us and assigns the new value to an instance
   }
 
   //generics
@@ -88,7 +89,7 @@ object Recap extends App {
   // Scala collections: sequence, array, vectors, lists, maps, tuples
   val aMap = Map(
     "Daniel" -> 4,
-    "Alex" -> 2
+    "Alex"   -> 2
   )
 
   // collections: Options, Try
